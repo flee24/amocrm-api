@@ -6,9 +6,20 @@
   "repository": "git@github.com:flee24/amocrm-api.git",
   "author": "Alexander R <coder.elf@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "lint": "eslint ./",
+    "lint-fix": "eslint --fix ./"
+  },
   "dependencies": {
     "config": "^2.0.1",
     "form-data": "^2.3.3",
     "node-fetch": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }
