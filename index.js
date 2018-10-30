@@ -13,7 +13,7 @@ class Amocrm {
     }
 
     async _storeAuth(res) {
-        const cookies = res.headers.getAll('Set-Cookie');
+	const cookies = res.headers.get("Set-Cookie").split(",");
 
         if (!cookies) {
             throw new AmoAuthError();
