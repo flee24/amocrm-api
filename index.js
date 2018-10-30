@@ -97,6 +97,20 @@ class Amocrm {
     return result.response.contacts.add;
   }
 
+  async updateLead(params) {
+    const requestBody = { request: { leads: { update: [params] } } };
+
+    const res = await fetch(`${this.host}/private/api/v2/json/leads/set`, {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        Cookie: this.cookies,
+      },
+    });
+
+    await this._checkStatus(res);
+  }
+
   async createLead(params) {
     const requestBody = { request: { leads: { add: [params] } } };
 
