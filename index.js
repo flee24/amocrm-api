@@ -65,22 +65,34 @@ class Amocrm {
     return result.response.account;
   }
 
-  async getContacts() {
-    const res = await fetch(`${this.host}/api/v2/contacts`, {
+  async getContacts(params) {
+    let queryString = '';
+    if (params) {
+      queryString = `?${Object.keys(params)
+        .map(key => `${key}=${params[key]}`)
+        .join('&')}`;
+    }
+
+    const res = await fetch(`${this.host}/api/v2/contacts${queryString}`, {
       method: 'GET',
       headers: {
         Cookie: this.cookies,
       },
     });
 
+    if (res.status === 204) {
+      return [];
+    }
+
     await this._checkStatus(res);
 
     const result = await res.json();
-    if (!result.items) {
-      throw new AmoRequestError();
+
+    if (!result._embedded || !result._embedded.items) {
+      return [];
     }
 
-    return result.items;
+    return result._embedded.items;
   }
 
   async updateContact(params) {
