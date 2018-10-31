@@ -1,16 +1,22 @@
 const fetch = require('node-fetch');
 const FormData = require('form-data');
-const config = require('config');
 
+const AmoError = require('./errors/AmoError');
 const AmoAuthError = require('./errors/AmoAuthError');
 const AmoRequestError = require('./errors/AmoRequestError');
 
 class Amocrm {
-  constructor() {
+  constructor(host = null, login = null, hash = null, debug = false) {
     this.cookies = null;
-    this.host = config.get('amo.host');
-    this.login = config.get('amo.login');
-    this.hash = config.get('amo.hash');
+    this.debug = debug;
+
+    if (!host || !login || !hash) {
+      throw new AmoError('Amocrm-api: no init params');
+    }
+
+    this.host = host;
+    this.login = login;
+    this.hash = hash;
   }
 
   async _storeAuth(res) {
@@ -42,6 +48,11 @@ class Amocrm {
   }
 
   async _checkStatus(res) {
+    if (this.debug) {
+      console.log(res.status);
+      console.dir(res);
+    }
+
     if (res.status !== 200) {
       throw new AmoRequestError();
     }
@@ -96,9 +107,9 @@ class Amocrm {
   }
 
   async updateContact(params) {
-    const requestBody = { request: { contacts: { update: [params] } } };
+    const requestBody = { update: [params] };
 
-    const res = await fetch(`${this.host}/private/api/v2/json/contacts/set`, {
+    const res = await fetch(`${this.host}/api/v2/contacts`, {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -110,9 +121,9 @@ class Amocrm {
   }
 
   async createContact(params) {
-    const requestBody = { request: { contacts: { add: [params] } } };
+    const requestBody = { add: [params] };
 
-    const res = await fetch(`${this.host}/private/api/v2/json/contacts/set`, {
+    const res = await fetch(`${this.host}/api/v2/contacts`, {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -124,13 +135,13 @@ class Amocrm {
 
     // TODO: Требуется обработка ошибки разбора JSON-а
     const result = await res.json();
-    return result.response.contacts.add;
+    return result._embedded.items[0];
   }
 
   async updateLead(params) {
-    const requestBody = { request: { leads: { update: [params] } } };
+    const requestBody = { update: [params] };
 
-    const res = await fetch(`${this.host}/private/api/v2/json/leads/set`, {
+    const res = await fetch(`${this.host}/api/v2/leads`, {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -142,9 +153,9 @@ class Amocrm {
   }
 
   async createLead(params) {
-    const requestBody = { request: { leads: { add: [params] } } };
+    const requestBody = { add: [params] };
 
-    const res = await fetch(`${this.host}/private/api/v2/json/leads/set`, {
+    const res = await fetch(`${this.host}/api/v2/leads`, {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -156,13 +167,13 @@ class Amocrm {
 
     // TODO: Требуется обработка ошибки разбора JSON-а
     const result = await res.json();
-    return result.response.leads.add;
+    return result._embedded.items[0];
   }
 
   async createTask(params) {
-    const requestBody = { request: { tasks: { add: [params] } } };
+    const requestBody = { add: [params] };
 
-    const res = await fetch(`${this.host}/private/api/v2/json/tasks/set`, {
+    const res = await fetch(`${this.host}/api/v2/tasks`, {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -174,7 +185,7 @@ class Amocrm {
 
     // TODO: Требуется обработка ошибки разбора JSON-а
     const result = await res.json();
-    return result.response.tasks.add;
+    return result._embedded.items[0];
   }
 }
 
