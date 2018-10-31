@@ -5,22 +5,26 @@
 const cli = require('cli');
 const Amocrm = require('../index');
 
-const params = cli.parse({
-  host: ['h', 'host', 'string', ''], // -f, --file FILE   A file to process
-  login: ['l', 'login', 'string', ''], // -t, --time TIME   An access time
-  hash: ['p', 'hash', 'string', ''], //     --work STRING What kind of work to do
-});
-
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
 
-(async () => {
-  const a = new Amocrm(params.host, params.login, params.hash, true);
-  await a.auth();
+test('ENV vars HOST, LOGIN, HASH', () => {
+  expect(process.env.HOST).toBeDefined();
+  expect(process.env.LOGIN).toBeDefined();
+  expect(process.env.HASH).toBeDefined();
+});
 
+it('Auth', async () => {
+  expect.hasAssertions();
+  const a = new Amocrm(process.env.HOST, process.env.LOGIN, process.env.HASH, true);
+  await a.auth();
+});
+
+/*
+(async () => {
   const info = await a.getCurrentAccount();
   console.log(info);
   console.dir(info.custom_fields.contacts);
@@ -59,3 +63,4 @@ function sleep(ms) {
     }),
   );
 })();
+*/
