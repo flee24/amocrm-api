@@ -65,6 +65,24 @@ class Amocrm {
     return result.response.account;
   }
 
+  async getContacts() {
+    const res = await fetch(`${this.host}/api/v2/contacts`, {
+      method: 'GET',
+      headers: {
+        Cookie: this.cookies,
+      },
+    });
+
+    await this._checkStatus(res);
+
+    const result = await res.json();
+    if (!result.items) {
+      throw new AmoRequestError();
+    }
+
+    return result.items;
+  }
+
   async updateContact(params) {
     const requestBody = { request: { contacts: { update: [params] } } };
 
