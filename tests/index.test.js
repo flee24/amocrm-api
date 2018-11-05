@@ -17,10 +17,21 @@ test('ENV vars HOST, LOGIN, HASH', () => {
   expect(process.env.HASH).toBeDefined();
 });
 
+const a = new Amocrm(process.env.HOST, process.env.LOGIN, process.env.HASH, false);
+
 it('Auth', async () => {
-  expect.hasAssertions();
-  const a = new Amocrm(process.env.HOST, process.env.LOGIN, process.env.HASH, true);
-  await a.auth();
+  // expect.assertions(1);
+
+  try {
+    await a.auth();
+  } catch (e) {
+    expect(true).toBe(false);
+  }
+});
+
+it('getCurrentAccount', async () => {
+  const info = await a.getCurrentAccount();
+  expect(info).toBeInstanceOf(Object);
 });
 
 /*
