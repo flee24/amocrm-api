@@ -200,6 +200,24 @@ class Amocrm {
     return result._embedded.items[0];
   }
 
+  async createNote(params) {
+    const requestBody = { add: [params] };
+
+    const res = await fetch(`${this.host}/api/v2/notes`, {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        Cookie: this.cookies,
+      },
+    });
+
+    await this._checkStatus(res);
+
+    // TODO: Требуется обработка ошибки разбора JSON-а
+    const result = await res.json();
+    return result._embedded.items[0];
+  }
+
   async createTask(params) {
     const requestBody = { add: [params] };
 

@@ -39,6 +39,18 @@ it('getLeads', async () => {
   expect(leads).toBeInstanceOf(Object);
 });
 
+it('createNote', async () => {
+  const date = new Date();
+  const note = await a.createNote({
+    element_id: '20152970',
+    element_type: '2', // Lead
+    text: `Test note ${date.toString()}`,
+    note_type: '4', // COMMON
+  });
+  console.dir(note);
+  expect(note).toBeInstanceOf(Object);
+});
+
 /*
 (async () => {
   const info = await a.getCurrentAccount();
