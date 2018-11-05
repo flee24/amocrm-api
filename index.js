@@ -106,6 +106,36 @@ class Amocrm {
     return result._embedded.items;
   }
 
+  async getLeads(params) {
+    let queryString = '';
+    if (params) {
+      queryString = `?${Object.keys(params)
+        .map(key => `${key}=${params[key]}`)
+        .join('&')}`;
+    }
+
+    const res = await fetch(`${this.host}/api/v2/leads${queryString}`, {
+      method: 'GET',
+      headers: {
+        Cookie: this.cookies,
+      },
+    });
+
+    if (res.status === 204) {
+      return [];
+    }
+
+    await this._checkStatus(res);
+
+    const result = await res.json();
+
+    if (!result._embedded || !result._embedded.items) {
+      return [];
+    }
+
+    return result._embedded.items;
+  }
+
   async updateContact(params) {
     const requestBody = { update: [params] };
 

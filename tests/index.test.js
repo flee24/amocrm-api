@@ -34,6 +34,11 @@ it('getCurrentAccount', async () => {
   expect(info).toBeInstanceOf(Object);
 });
 
+it('getLeads', async () => {
+  const leads = await a.getLeads({ id: 0 }); // [20152970, 16559773] });
+  expect(leads).toBeInstanceOf(Object);
+});
+
 /*
 (async () => {
   const info = await a.getCurrentAccount();
