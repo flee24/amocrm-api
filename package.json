@@ -1,6 +1,6 @@
 {
   "name": "amocrm-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "AmoCRM API bindings (async-await)",
   "main": "index.js",
   "repository": "git@github.com:flee24/amocrm-api.git",
